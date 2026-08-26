@@ -8,6 +8,12 @@ from google.adk.models import Gemini
 from google.adk.tools.preload_memory_tool import PreloadMemoryTool
 from google.genai import types
 
+from app.firestore_tools import (
+    get_itinerary_details,
+    list_saved_itineraries,
+    save_travel_itinerary,
+)
+
 MODEL = "gemini-3.6-flash"
 
 
@@ -123,12 +129,24 @@ root_agent = Agent(
         "- Actively identify and remember all user allergies (e.g., peanuts, gluten, shellfish, dairy, pollen, latex, insect stings, medications) and dietary restrictions mentioned by the user.\n"
         "- Ensure every dining option, food tour, hotel amenity, and activity recommendation strictly accounts for and avoids the user's reported allergies.\n"
         "- Whenever preloaded memories contain allergy information, explicitly acknowledge allergy-safe options when presenting itineraries or dining suggestions.\n\n"
+        "DATABASE & ITINERARY MANAGEMENT:\n"
+        "- Use `list_saved_itineraries` to browse or search stored itineraries in the database.\n"
+        "- Use `get_itinerary_details` to retrieve full details for a saved itinerary.\n"
+        "- Use `save_travel_itinerary` whenever the user asks to save a newly planned trip or itinerary to their database.\n\n"
         "Always remember the user's stated travel preferences, budget, and facts from previous conversations to personalize your responses. "
         "Always recommend exciting itineraries, provide accurate budget breakdowns using `estimate_trip_budget`, "
         "suggest top attractions using `search_attractions`, and offer helpful packing/weather tips with `get_destination_weather`. "
         "Maintain an encouraging, well-structured, and helpful tone."
     ),
-    tools=[PreloadMemoryTool(), search_attractions, estimate_trip_budget, get_destination_weather],
+    tools=[
+        PreloadMemoryTool(),
+        search_attractions,
+        estimate_trip_budget,
+        get_destination_weather,
+        list_saved_itineraries,
+        get_itinerary_details,
+        save_travel_itinerary,
+    ],
     after_agent_callback=generate_memories_callback,
 )
 

@@ -3,5 +3,12 @@
   "deployment_target": "agent_runtime",
   "is_a2a": true,
   "agent_directory": "app",
-  "deployment_timestamp": "2026-08-26T18:49:07.367765+00:00"
+  "deployment_timestamp": "2026-08-26T18:49:07.367765+00:00",
+  "pending_operation": {
+    "operation_name": "projects/1089479494300/locations/us-east1/reasoningEngines/6627099628233818112/operations/7937255487500713984",
+    "project": "qwiklabs-gcp-03-75c5785951f4",
+    "location": "us-east1",
+    "deployment_target": "agent_runtime",
+    "started_at": "2026-08-26T19:15:20.880181+00:00"
+  }
 }
