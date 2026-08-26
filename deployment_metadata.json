@@ -5,10 +5,10 @@
   "agent_directory": "app",
   "deployment_timestamp": "2026-08-26T18:49:07.367765+00:00",
   "pending_operation": {
-    "operation_name": "projects/1089479494300/locations/us-east1/reasoningEngines/6627099628233818112/operations/3299110821262524416",
+    "operation_name": "projects/1089479494300/locations/us-east1/reasoningEngines/6627099628233818112/operations/2696121052404121600",
     "project": "qwiklabs-gcp-03-75c5785951f4",
     "location": "us-east1",
     "deployment_target": "agent_runtime",
-    "started_at": "2026-08-26T19:25:56.125290+00:00"
+    "started_at": "2026-08-26T19:35:23.839979+00:00"
   }
 }
