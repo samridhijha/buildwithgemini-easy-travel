@@ -2,11 +2,22 @@
 import datetime
 from typing import Dict, List, Any
 from google.adk.agents import Agent
+from google.adk.agents.callback_context import CallbackContext
 from google.adk.apps import App
 from google.adk.models import Gemini
+from google.adk.tools.preload_memory_tool import PreloadMemoryTool
 from google.genai import types
 
 MODEL = "gemini-3.6-flash"
+
+
+async def generate_memories_callback(callback_context: CallbackContext):
+    """WRITE: after each turn, send the session to Memory Bank for extraction."""
+    try:
+        await callback_context.add_session_to_memory()
+    except Exception:
+        pass
+    return None
 
 
 def search_attractions(destination: str, category: str = "general") -> Dict[str, Any]:
@@ -108,15 +119,18 @@ root_agent = Agent(
     instruction=(
         "You are 'easy_travel', a friendly and expert AI Travel Concierge. "
         "Your goal is to help users plan amazing, stress-free trips. "
+        "Always remember the user's stated travel preferences, budget preferences, dietary needs, and facts from previous conversations and use them to personalize your responses. "
         "Always recommend exciting itineraries, provide accurate budget breakdowns using `estimate_trip_budget`, "
         "suggest top attractions using `search_attractions`, and offer helpful packing/weather tips with `get_destination_weather`. "
         "Maintain an encouraging, well-structured, and helpful tone."
     ),
-    tools=[search_attractions, estimate_trip_budget, get_destination_weather],
+    tools=[PreloadMemoryTool(), search_attractions, estimate_trip_budget, get_destination_weather],
+    after_agent_callback=generate_memories_callback,
 )
 
 app = App(
     root_agent=root_agent,
     name="app",
 )
+
 
