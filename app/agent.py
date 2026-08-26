@@ -14,6 +14,7 @@ from app.firestore_tools import (
     save_travel_itinerary,
 )
 from app.weather_tool import get_live_weather
+from app.rag_tool import consult_herbal_guide
 
 MODEL = "gemini-3.6-flash"
 
@@ -131,6 +132,8 @@ root_agent = Agent(
         "- Use `save_travel_itinerary` whenever the user asks to save a newly planned trip or itinerary to their database.\n\n"
         "WEATHER & PACKING:\n"
         "- Use `get_live_weather` to fetch real-time weather and 3-day forecasts for any destination worldwide.\n\n"
+        "HERBAL & NATURAL HEALTH GROUNDING:\n"
+        "- Use `consult_herbal_guide` to search Nicholas Culpeper's Complete Herbal corpus for traditional remedies, plant advice, and herbal health tips.\n\n"
         "Always remember the user's stated travel preferences, budget, and facts from previous conversations to personalize your responses. "
         "Always recommend exciting itineraries, provide accurate budget breakdowns using `estimate_trip_budget`, "
         "suggest top attractions using `search_attractions`, and offer helpful packing/weather tips with `get_live_weather`. "
@@ -145,6 +148,7 @@ root_agent = Agent(
         list_saved_itineraries,
         get_itinerary_details,
         save_travel_itinerary,
+        consult_herbal_guide,
     ],
     after_agent_callback=generate_memories_callback,
 )
