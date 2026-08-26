@@ -13,6 +13,7 @@ from app.firestore_tools import (
     list_saved_itineraries,
     save_travel_itinerary,
 )
+from app.weather_tool import get_live_weather
 
 MODEL = "gemini-3.6-flash"
 
@@ -100,20 +101,15 @@ def estimate_trip_budget(days: int, daily_budget_usd: float, number_of_travelers
 
 
 def get_destination_weather(destination: str) -> Dict[str, Any]:
-    """Get the current weather and packing advice for a destination.
+    """Get real live weather and packing advice for a destination using Open-Meteo API.
 
     Args:
         destination: Destination city or location name.
 
     Returns:
-        Dict with weather condition, temperature, and packing suggestions.
+        Dict with current weather condition, temperature, and 3-day forecast.
     """
-    dest_lower = destination.lower()
-    if "tokyo" in dest_lower:
-        return {"destination": "Tokyo", "condition": "Mild & Clear", "temp_f": 65, "packing": "Light jacket and comfortable walking shoes."}
-    elif "paris" in dest_lower:
-        return {"destination": "Paris", "condition": "Partly Cloudy", "temp_f": 58, "packing": "Layered clothing and an umbrella."}
-    return {"destination": destination.title(), "condition": "Sunny & Pleasant", "temp_f": 72, "packing": "Sunglasses, sunscreen, and light wear."}
+    return get_live_weather(destination)
 
 
 root_agent = Agent(
@@ -133,15 +129,18 @@ root_agent = Agent(
         "- Use `list_saved_itineraries` to browse or search stored itineraries in the database.\n"
         "- Use `get_itinerary_details` to retrieve full details for a saved itinerary.\n"
         "- Use `save_travel_itinerary` whenever the user asks to save a newly planned trip or itinerary to their database.\n\n"
+        "WEATHER & PACKING:\n"
+        "- Use `get_live_weather` to fetch real-time weather and 3-day forecasts for any destination worldwide.\n\n"
         "Always remember the user's stated travel preferences, budget, and facts from previous conversations to personalize your responses. "
         "Always recommend exciting itineraries, provide accurate budget breakdowns using `estimate_trip_budget`, "
-        "suggest top attractions using `search_attractions`, and offer helpful packing/weather tips with `get_destination_weather`. "
+        "suggest top attractions using `search_attractions`, and offer helpful packing/weather tips with `get_live_weather`. "
         "Maintain an encouraging, well-structured, and helpful tone."
     ),
     tools=[
         PreloadMemoryTool(),
         search_attractions,
         estimate_trip_budget,
+        get_live_weather,
         get_destination_weather,
         list_saved_itineraries,
         get_itinerary_details,
